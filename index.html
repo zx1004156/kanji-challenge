@@ -18,6 +18,7 @@
   #sentence { position: absolute; left: 55px; width: 1490px; top: 230px; height: 280px;
               display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
               font-size: 67px; color: #222; letter-spacing: 4px; line-height: 1.5; }
+  #sentence ruby rt, #ex-sentence ruby rt { font-size: .42em; color: #666; letter-spacing: 0; font-weight: 400; }
   #sentence .ans { color: #d32f2f; font-weight: 700; display: inline-block; animation: pop .55s cubic-bezier(.2,1.6,.4,1); }
   @keyframes pop { 0% { transform: scale(.3); opacity: 0; } 60% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
   #note { animation: fadeup .5s .25s both; }
@@ -188,6 +189,7 @@
   <button data-lv="中">中</button>
   <button data-lv="高">高</button>
   <span class="sep"></span>
+  <button id="b-furi" class="sel">ふりがな</button>
   <button id="b-list">題目一覧</button>
   <button id="b-reset">リセット</button>
   <button id="b-fs">全画面</button>
@@ -196,6 +198,334 @@
 <script>
 /* ===== 右下角顯示的文字 ===== */
 const FOOTER = "文化祭 ２０２６";   // 留空 = 不顯示
+
+/* ===== ふりがな（平假名讀音）=====
+   題目中「【】以外」的漢字會顯示讀音。下面的資料是自動產生的：
+   key = 題目資料裡的前後文字，value = 加上讀音後的 HTML。
+   新增的題目如果這裡沒有對應資料，就會直接顯示原文（沒有讀音）。 */
+let FURIGANA_ON = true;
+const RUBY = {
+"、京都駅で買い物をしました。": "、<ruby>京都駅<rt>きょうとえき</rt></ruby>で<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>をしました。",
+"、初めて日本に来ました。": "、<ruby>初<rt>はじ</rt></ruby>めて<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>ました。",
+"、水を買っておきます。": "、<ruby>水<rt>みず</rt></ruby>を<ruby>買<rt>か</rt></ruby>っておきます。",
+"い猫が庭にいました。": "い<ruby>猫<rt>ねこ</rt></ruby>が<ruby>庭<rt>にわ</rt></ruby>にいました。",
+"がいいので、散歩しましょう。": "がいいので、<ruby>散歩<rt>さんぽ</rt></ruby>しましょう。",
+"がとても明るかったです。": "がとても<ruby>明<rt>あか</rt></ruby>るかったです。",
+"がとても明るくて良かったです。": "がとても<ruby>明<rt>あか</rt></ruby>るくて<ruby>良<rt>よ</rt></ruby>かったです。",
+"がゆっくり進んでいきます。": "がゆっくり<ruby>進<rt>すす</rt></ruby>んでいきます。",
+"がチームを優勝に導いた。": "がチームを<ruby>優勝<rt>ゆうしょう</rt></ruby>に<ruby>導<rt>みちび</rt></ruby>いた。",
+"が一本折れた。": "が<ruby>一本<rt>いっぽん</rt></ruby><ruby>折<rt>お</rt></ruby>れた。",
+"が上がった。": "が<ruby>上<rt>あ</rt></ruby>がった。",
+"が上手です。": "が<ruby>上手<rt>じょうず</rt></ruby>です。",
+"が出た。": "が<ruby>出<rt>で</rt></ruby>た。",
+"が問題となった。": "が<ruby>問題<rt>もんだい</rt></ruby>となった。",
+"が大切です。": "が<ruby>大切<rt>たいせつ</rt></ruby>です。",
+"が悪くて、文化祭に行けませんでした。": "が<ruby>悪<rt>わる</rt></ruby>くて、<ruby>文化祭<rt>ぶんかさい</rt></ruby>に<ruby>行<rt>い</rt></ruby>けませんでした。",
+"が施されている。": "が<ruby>施<rt>ほどこ</rt></ruby>されている。",
+"が決まった。": "が<ruby>決<rt>き</rt></ruby>まった。",
+"が決まりました。": "が<ruby>決<rt>き</rt></ruby>まりました。",
+"が町に響いている。": "が<ruby>町<rt>まち</rt></ruby>に<ruby>響<rt>ひび</rt></ruby>いている。",
+"が縮みやすいそうです。": "が<ruby>縮<rt>ちぢ</rt></ruby>みやすいそうです。",
+"が長かったです。": "が<ruby>長<rt>なが</rt></ruby>かったです。",
+"が降っています。": "が<ruby>降<rt>ふ</rt></ruby>っています。",
+"が鹿を追っていた。": "が<ruby>鹿<rt>しか</rt></ruby>を<ruby>追<rt>お</rt></ruby>っていた。",
+"このお寺には千年以上の": "このお<ruby>寺<rt>てら</rt></ruby>には<ruby>千年<rt>せんねん</rt></ruby><ruby>以上<rt>いじょう</rt></ruby>の",
+"この公園はとても": "この<ruby>公園<rt>こうえん</rt></ruby>はとても",
+"この問題はとても": "この<ruby>問題<rt>もんだい</rt></ruby>はとても",
+"この寺の": "この<ruby>寺<rt>てら</rt></ruby>の",
+"この店のケーキはとても": "この<ruby>店<rt>みせ</rt></ruby>のケーキはとても",
+"この祭りには、長い": "この<ruby>祭<rt>まつ</rt></ruby>りには、<ruby>長<rt>なが</rt></ruby>い",
+"この絵には大きな": "この<ruby>絵<rt>え</rt></ruby>には<ruby>大<rt>おお</rt></ruby>きな",
+"して、声が震えた。": "して、<ruby>声<rt>こえ</rt></ruby>が<ruby>震<rt>ふる</rt></ruby>えた。",
+"しに行った。": "しに<ruby>行<rt>い</rt></ruby>った。",
+"するパーティーを開いた。": "するパーティーを<ruby>開<rt>ひら</rt></ruby>いた。",
+"する工事が始まった。": "する<ruby>工事<rt>こうじ</rt></ruby>が<ruby>始<rt>はじ</rt></ruby>まった。",
+"その店は観光客で": "その<ruby>店<rt>みせ</rt></ruby>は<ruby>観光客<rt>かんこうきゃく</rt></ruby>で",
+"その日は": "その<ruby>日<rt>ひ</rt></ruby>は",
+"その言葉に強い": "その<ruby>言葉<rt>ことば</rt></ruby>に<ruby>強<rt>つよ</rt></ruby>い",
+"で、雪がほとんど降りませんでした。": "で、<ruby>雪<rt>ゆき</rt></ruby>がほとんど<ruby>降<rt>ふ</rt></ruby>りませんでした。",
+"でおみくじを引きました。": "でおみくじを<ruby>引<rt>ひ</rt></ruby>きました。",
+"で働いています。": "で<ruby>働<rt>はたら</rt></ruby>いています。",
+"で出かけました。": "で<ruby>出<rt>で</rt></ruby>かけました。",
+"で切手を買いました。": "で<ruby>切手<rt>きって</rt></ruby>を<ruby>買<rt>か</rt></ruby>いました。",
+"で学校に行きます。": "で<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+"で学校に通っています。": "で<ruby>学校<rt>がっこう</rt></ruby>に<ruby>通<rt>かよ</rt></ruby>っています。",
+"で待ち合わせをしました。": "で<ruby>待<rt>ま</rt></ruby>ち<ruby>合<rt>あ</rt></ruby>わせをしました。",
+"で旅をするのが好きです。": "で<ruby>旅<rt>たび</rt></ruby>をするのが<ruby>好<rt>す</rt></ruby>きです。",
+"で日本語を勉強しています。": "で<ruby>日本語<rt>にほんご</rt></ruby>を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+"で昼ご飯を食べました。": "で<ruby>昼<rt>ひる</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べました。",
+"で本を借りました。": "で<ruby>本<rt>ほん</rt></ruby>を<ruby>借<rt>か</rt></ruby>りました。",
+"で東京へ行きました。": "で<ruby>東京<rt>とうきょう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
+"で母と話しました。": "で<ruby>母<rt>はは</rt></ruby>と<ruby>話<rt>はな</rt></ruby>しました。",
+"で毎日忙しいです。": "で<ruby>毎日<rt>まいにち</rt></ruby><ruby>忙<rt>いそが</rt></ruby>しいです。",
+"で泳ぎたいです。": "で<ruby>泳<rt>およ</rt></ruby>ぎたいです。",
+"で焼きそばを買いました。": "で<ruby>焼<rt>や</rt></ruby>きそばを<ruby>買<rt>か</rt></ruby>いました。",
+"で祭りが行われた。": "で<ruby>祭<rt>まつ</rt></ruby>りが<ruby>行<rt>おこな</rt></ruby>われた。",
+"として働いている。": "として<ruby>働<rt>はたら</rt></ruby>いている。",
+"と一緒に文化祭を回りました。": "と<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>文化祭<rt>ぶんかさい</rt></ruby>を<ruby>回<rt>まわ</rt></ruby>りました。",
+"と散歩しました。": "と<ruby>散歩<rt>さんぽ</rt></ruby>しました。",
+"なお寺がたくさんあります。": "なお<ruby>寺<rt>てら</rt></ruby>がたくさんあります。",
+"なものを買いに行く。": "なものを<ruby>買<rt>か</rt></ruby>いに<ruby>行<rt>い</rt></ruby>く。",
+"なアイデアに満ちていた。": "なアイデアに<ruby>満<rt>み</rt></ruby>ちていた。",
+"な作業が求められる。": "な<ruby>作業<rt>さぎょう</rt></ruby>が<ruby>求<rt>もと</rt></ruby>められる。",
+"な変化が見られた。": "な<ruby>変化<rt>へんか</rt></ruby>が<ruby>見<rt>み</rt></ruby>られた。",
+"な態度で話を聞いていた。": "な<ruby>態度<rt>たいど</rt></ruby>で<ruby>話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いていた。",
+"な着こなしの男性がいた。": "な<ruby>着<rt>き</rt></ruby>こなしの<ruby>男性<rt>だんせい</rt></ruby>がいた。",
+"な着物が人々の目を引いた。": "な<ruby>着物<rt>きもの</rt></ruby>が<ruby>人々<rt>ひとびと</rt></ruby>の<ruby>目<rt>め</rt></ruby>を<ruby>引<rt>ひ</rt></ruby>いた。",
+"な経験になりました。": "な<ruby>経験<rt>けいけん</rt></ruby>になりました。",
+"な衣装で舞台に立った。": "な<ruby>衣装<rt>いしょう</rt></ruby>で<ruby>舞台<rt>ぶたい</rt></ruby>に<ruby>立<rt>た</rt></ruby>った。",
+"な衣装を身にまとっていた。": "な<ruby>衣装<rt>いしょう</rt></ruby>を<ruby>身<rt>み</rt></ruby>にまとっていた。",
+"な計画を立てた。": "な<ruby>計画<rt>けいかく</rt></ruby>を<ruby>立<rt>た</rt></ruby>てた。",
+"な警備が行われた。": "な<ruby>警備<rt>けいび</rt></ruby>が<ruby>行<rt>おこな</rt></ruby>われた。",
+"な返事をしないでください。": "な<ruby>返事<rt>へんじ</rt></ruby>をしないでください。",
+"な雨の日が続いている。": "な<ruby>雨<rt>あめ</rt></ruby>の<ruby>日<rt>ひ</rt></ruby>が<ruby>続<rt>つづ</rt></ruby>いている。",
+"な雰囲気の中で式が行われた。": "な<ruby>雰囲気<rt>ふんいき</rt></ruby>の<ruby>中<rt>なか</rt></ruby>で<ruby>式<rt>しき</rt></ruby>が<ruby>行<rt>おこな</rt></ruby>われた。",
+"にきれいな月が出ていました。": "にきれいな<ruby>月<rt>つき</rt></ruby>が<ruby>出<rt>で</rt></ruby>ていました。",
+"に乗ったことがありますか。": "に<ruby>乗<rt>の</rt></ruby>ったことがありますか。",
+"に出席した。": "に<ruby>出席<rt>しゅっせき</rt></ruby>した。",
+"に勉強しています。": "に<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+"に友達からプレゼントをもらいました。": "に<ruby>友達<rt>ともだち</rt></ruby>からプレゼントをもらいました。",
+"に友達とお弁当を食べました。": "に<ruby>友達<rt>ともだち</rt></ruby>とお<ruby>弁当<rt>べんとう</rt></ruby>を<ruby>食<rt>た</rt></ruby>べました。",
+"に対応する。": "に<ruby>対応<rt>たいおう</rt></ruby>する。",
+"に忘れ物をしました。": "に<ruby>忘<rt>わす</rt></ruby>れ<ruby>物<rt>もの</rt></ruby>をしました。",
+"に思います。": "に<ruby>思<rt>おも</rt></ruby>います。",
+"に日本語を勉強している。": "に<ruby>日本語<rt>にほんご</rt></ruby>を<ruby>勉強<rt>べんきょう</rt></ruby>している。",
+"に映画を見ました。": "に<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>ました。",
+"に曲がってください。": "に<ruby>曲<rt>ま</rt></ruby>がってください。",
+"に毎週行きます。": "に<ruby>毎週<rt>まいしゅう</rt></ruby><ruby>行<rt>い</rt></ruby>きます。",
+"に気をつけてください。": "に<ruby>気<rt>き</rt></ruby>をつけてください。",
+"に聞いてください。": "に<ruby>聞<rt>き</rt></ruby>いてください。",
+"に行きたいです。": "に<ruby>行<rt>い</rt></ruby>きたいです。",
+"に行きました。": "に<ruby>行<rt>い</rt></ruby>きました。",
+"に行きます。": "に<ruby>行<rt>い</rt></ruby>きます。",
+"に話を聞きました。": "に<ruby>話<rt>はなし</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きました。",
+"に起きている。": "に<ruby>起<rt>お</rt></ruby>きている。",
+"に進めるために、役割を分担した。": "に<ruby>進<rt>すす</rt></ruby>めるために、<ruby>役割<rt>やくわり</rt></ruby>を<ruby>分担<rt>ぶんたん</rt></ruby>した。",
+"のある町並みを歩いた。": "のある<ruby>町並<rt>まちな</rt></ruby>みを<ruby>歩<rt>ある</rt></ruby>いた。",
+"のおかげで、文化祭は成功しました。": "のおかげで、<ruby>文化祭<rt>ぶんかさい</rt></ruby>は<ruby>成功<rt>せいこう</rt></ruby>しました。",
+"のおかげで、迷わずに済んだ。": "のおかげで、<ruby>迷<rt>まよ</rt></ruby>わずに<ruby>済<rt>す</rt></ruby>んだ。",
+"ので、コートを着ます。": "ので、コートを<ruby>着<rt>き</rt></ruby>ます。",
+"のとき、初めて一人で電車に乗りました。": "のとき、<ruby>初<rt>はじ</rt></ruby>めて<ruby>一人<rt>ひとり</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>りました。",
+"の会議は午前十時から始まります。": "の<ruby>会議<rt>かいぎ</rt></ruby>は<ruby>午前<rt>ごぜん</rt></ruby><ruby>十時<rt>じゅうじ</rt></ruby>から<ruby>始<rt>はじ</rt></ruby>まります。",
+"の前で待っています。": "の<ruby>前<rt>まえ</rt></ruby>で<ruby>待<rt>ま</rt></ruby>っています。",
+"の和菓子屋で団子を買った。": "の<ruby>和菓子屋<rt>わがしや</rt></ruby>で<ruby>団子<rt>だんご</rt></ruby>を<ruby>買<rt>か</rt></ruby>った。",
+"の授業がありました。": "の<ruby>授業<rt>じゅぎょう</rt></ruby>がありました。",
+"の授業が好きです。": "の<ruby>授業<rt>じゅぎょう</rt></ruby>が<ruby>好<rt>す</rt></ruby>きです。",
+"の授業は楽しいです。": "の<ruby>授業<rt>じゅぎょう</rt></ruby>は<ruby>楽<rt>たの</rt></ruby>しいです。",
+"の花が咲いている。": "の<ruby>花<rt>はな</rt></ruby>が<ruby>咲<rt>さ</rt></ruby>いている。",
+"はとても古いです。": "はとても<ruby>古<rt>ふる</rt></ruby>いです。",
+"はとても美しい。": "はとても<ruby>美<rt>うつく</rt></ruby>しい。",
+"はとても美しかったです。": "はとても<ruby>美<rt>うつく</rt></ruby>しかったです。",
+"は三時からです。": "は<ruby>三時<rt>さんじ</rt></ruby>からです。",
+"は分かりやすい。": "は<ruby>分<rt>わ</rt></ruby>かりやすい。",
+"は図書館が休みです。": "は<ruby>図書館<rt>としょかん</rt></ruby>が<ruby>休<rt>やす</rt></ruby>みです。",
+"は店が混んでいます。": "は<ruby>店<rt>みせ</rt></ruby>が<ruby>混<rt>こ</rt></ruby>んでいます。",
+"は日本で働きたいです。": "は<ruby>日本<rt>にほん</rt></ruby>で<ruby>働<rt>はたら</rt></ruby>きたいです。",
+"は美しい庭です。": "は<ruby>美<rt>うつく</rt></ruby>しい<ruby>庭<rt>にわ</rt></ruby>です。",
+"は駅の近くにあります。": "は<ruby>駅<rt>えき</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くにあります。",
+"へ旅行に行きます。": "へ<ruby>旅行<rt>りょこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+"へ行きます。": "へ<ruby>行<rt>い</rt></ruby>きます。",
+"をたくさん撮りました。": "をたくさん<ruby>撮<rt>と</rt></ruby>りました。",
+"をたくさん食べましょう。": "をたくさん<ruby>食<rt>た</rt></ruby>べましょう。",
+"を三冊借りました。": "を<ruby>三冊<rt>さんさつ</rt></ruby><ruby>借<rt>か</rt></ruby>りました。",
+"を作るのが好きです。": "を<ruby>作<rt>つく</rt></ruby>るのが<ruby>好<rt>す</rt></ruby>きです。",
+"を取った。": "を<ruby>取<rt>と</rt></ruby>った。",
+"を大勢で担いだ。": "を<ruby>大勢<rt>おおぜい</rt></ruby>で<ruby>担<rt>かつ</rt></ruby>いだ。",
+"を学んだ。": "を<ruby>学<rt>まな</rt></ruby>んだ。",
+"を学んでいます。": "を<ruby>学<rt>まな</rt></ruby>んでいます。",
+"を守りましょう。": "を<ruby>守<rt>まも</rt></ruby>りましょう。",
+"を守るために、ごみを分けましょう。": "を<ruby>守<rt>まも</rt></ruby>るために、ごみを<ruby>分<rt>わ</rt></ruby>けましょう。",
+"を忘れて、先生に注意されました。": "を<ruby>忘<rt>わす</rt></ruby>れて、<ruby>先生<rt>せんせい</rt></ruby>に<ruby>注意<rt>ちゅうい</rt></ruby>されました。",
+"を忘れてしまいました。": "を<ruby>忘<rt>わす</rt></ruby>れてしまいました。",
+"を散歩します。": "を<ruby>散歩<rt>さんぽ</rt></ruby>します。",
+"を書いて送りました。": "を<ruby>書<rt>か</rt></ruby>いて<ruby>送<rt>おく</rt></ruby>りました。",
+"を楽しみました。": "を<ruby>楽<rt>たの</rt></ruby>しみました。",
+"を歌ってくれました。": "を<ruby>歌<rt>うた</rt></ruby>ってくれました。",
+"を毎朝読んでいます。": "を<ruby>毎朝<rt>まいあさ</rt></ruby><ruby>読<rt>よ</rt></ruby>んでいます。",
+"を洗ってから学校へ行きます。": "を<ruby>洗<rt>あら</rt></ruby>ってから<ruby>学校<rt>がっこう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+"を着て、花火大会に行きました。": "を<ruby>着<rt>き</rt></ruby>て、<ruby>花火大会<rt>はなびたいかい</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
+"を確かめた。": "を<ruby>確<rt>たし</rt></ruby>かめた。",
+"を結ぶのは難しい。": "を<ruby>結<rt>むす</rt></ruby>ぶのは<ruby>難<rt>むずか</rt></ruby>しい。",
+"を見ました。": "を<ruby>見<rt>み</rt></ruby>ました。",
+"を見ます。": "を<ruby>見<rt>み</rt></ruby>ます。",
+"を見ると、もう三時でした。": "を<ruby>見<rt>み</rt></ruby>ると、もう<ruby>三時<rt>さんじ</rt></ruby>でした。",
+"を見直す必要がある。": "を<ruby>見直<rt>みなお</rt></ruby>す<ruby>必要<rt>ひつよう</rt></ruby>がある。",
+"を覚えた。": "を<ruby>覚<rt>おぼ</rt></ruby>えた。",
+"を覚えるのは大変です。": "を<ruby>覚<rt>おぼ</rt></ruby>えるのは<ruby>大変<rt>たいへん</rt></ruby>です。",
+"を調べた。": "を<ruby>調<rt>しら</rt></ruby>べた。",
+"を開けてください。": "を<ruby>開<rt>あ</rt></ruby>けてください。",
+"を食べました。": "を<ruby>食<rt>た</rt></ruby>べました。",
+"を飲みます。": "を<ruby>飲<rt>の</rt></ruby>みます。",
+"クラスの代表に": "クラスの<ruby>代表<rt>だいひょう</rt></ruby>に",
+"シャツを買いました。": "シャツを<ruby>買<rt>か</rt></ruby>いました。",
+"スマホの使いすぎには": "スマホの<ruby>使<rt>つか</rt></ruby>いすぎには",
+"バスを待つ": "バスを<ruby>待<rt>ま</rt></ruby>つ",
+"三時に会いましょう。": "<ruby>三時<rt>さんじ</rt></ruby>に<ruby>会<rt>あ</rt></ruby>いましょう。",
+"両親のために、実家の近くに引っ越しました。": "<ruby>両親<rt>りょうしん</rt></ruby>のために、<ruby>実家<rt>じっか</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに<ruby>引<rt>ひ</rt></ruby>っ<ruby>越<rt>こ</rt></ruby>しました。",
+"京都": "<ruby>京都<rt>きょうと</rt></ruby>",
+"京都には": "<ruby>京都<rt>きょうと</rt></ruby>には",
+"京都の夏はとても": "<ruby>京都<rt>きょうと</rt></ruby>の<ruby>夏<rt>なつ</rt></ruby>はとても",
+"京都の夜景を": "<ruby>京都<rt>きょうと</rt></ruby>の<ruby>夜景<rt>やけい</rt></ruby>を",
+"京都の山の": "<ruby>京都<rt>きょうと</rt></ruby>の<ruby>山<rt>やま</rt></ruby>の",
+"京都の町並みには独特の": "<ruby>京都<rt>きょうと</rt></ruby>の<ruby>町並<rt>まちな</rt></ruby>みには<ruby>独特<rt>どくとく</rt></ruby>の",
+"京都は": "<ruby>京都<rt>きょうと</rt></ruby>は",
+"京都駅で": "<ruby>京都駅<rt>きょうとえき</rt></ruby>で",
+"今年は": "<ruby>今年<rt>ことし</rt></ruby>は",
+"今日の晩ご飯は": "<ruby>今日<rt>きょう</rt></ruby>の<ruby>晩<rt>ばん</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>は",
+"今日は": "<ruby>今日<rt>きょう</rt></ruby>は",
+"他人の作品を": "<ruby>他人<rt>たにん</rt></ruby>の<ruby>作品<rt>さくひん</rt></ruby>を",
+"会場では": "<ruby>会場<rt>かいじょう</rt></ruby>では",
+"会議は": "<ruby>会議<rt>かいぎ</rt></ruby>は",
+"伝統工芸の": "<ruby>伝統工芸<rt>でんとうこうげい</rt></ruby>の",
+"伝統行事を後世に": "<ruby>伝統<rt>でんとう</rt></ruby><ruby>行事<rt>ぎょうじ</rt></ruby>を<ruby>後世<rt>こうせい</rt></ruby>に",
+"係をしました。": "<ruby>係<rt>がかり</rt></ruby>をしました。",
+"先生が文法を": "<ruby>先生<rt>せんせい</rt></ruby>が<ruby>文法<rt>ぶんぽう</rt></ruby>を",
+"先生と進路について": "<ruby>先生<rt>せんせい</rt></ruby>と<ruby>進路<rt>しんろ</rt></ruby>について",
+"先輩の": "<ruby>先輩<rt>せんぱい</rt></ruby>の",
+"公園で": "<ruby>公園<rt>こうえん</rt></ruby>で",
+"冬は": "<ruby>冬<rt>ふゆ</rt></ruby>は",
+"冬休みに": "<ruby>冬休<rt>ふゆやす</rt></ruby>みに",
+"出発前に、もう一度予約の内容を": "<ruby>出発前<rt>しゅっぱつまえ</rt></ruby>に、もう<ruby>一度<rt>いちど</rt></ruby><ruby>予約<rt>よやく</rt></ruby>の<ruby>内容<rt>ないよう</rt></ruby>を",
+"出発前に、もう一度予約を": "<ruby>出発前<rt>しゅっぱつまえ</rt></ruby>に、もう<ruby>一度<rt>いちど</rt></ruby><ruby>予約<rt>よやく</rt></ruby>を",
+"分からないことがあれば、": "<ruby>分<rt>わ</rt></ruby>からないことがあれば、",
+"分からないことがあれば、入口の": "<ruby>分<rt>わ</rt></ruby>からないことがあれば、<ruby>入口<rt>いりぐち</rt></ruby>の",
+"十分です。": "<ruby>十分<rt>じゅっぷん</rt></ruby>です。",
+"十時に寝ます。": "<ruby>十時<rt>じゅうじ</rt></ruby>に<ruby>寝<rt>ね</rt></ruby>ます。",
+"友達に手紙を": "<ruby>友達<rt>ともだち</rt></ruby>に<ruby>手紙<rt>てがみ</rt></ruby>を",
+"友達の発表に": "<ruby>友達<rt>ともだち</rt></ruby>の<ruby>発表<rt>はっぴょう</rt></ruby>に",
+"友達の試合を": "<ruby>友達<rt>ともだち</rt></ruby>の<ruby>試合<rt>しあい</rt></ruby>を",
+"古い": "<ruby>古<rt>ふる</rt></ruby>い",
+"古い寺を": "<ruby>古<rt>ふる</rt></ruby>い<ruby>寺<rt>てら</rt></ruby>を",
+"古い建物が": "<ruby>古<rt>ふる</rt></ruby>い<ruby>建物<rt>たてもの</rt></ruby>が",
+"台風で古い家が": "<ruby>台風<rt>たいふう</rt></ruby>で<ruby>古<rt>ふる</rt></ruby>い<ruby>家<rt>いえ</rt></ruby>が",
+"商品を棚に": "<ruby>商品<rt>しょうひん</rt></ruby>を<ruby>棚<rt>たな</rt></ruby>に",
+"図書館で": "<ruby>図書館<rt>としょかん</rt></ruby>で",
+"国境からの軍隊の": "<ruby>国境<rt>こっきょう</rt></ruby>からの<ruby>軍隊<rt>ぐんたい</rt></ruby>の",
+"園でパンダを見ました。": "<ruby>園<rt>えん</rt></ruby>でパンダを<ruby>見<rt>み</rt></ruby>ました。",
+"地震が": "<ruby>地震<rt>じしん</rt></ruby>が",
+"地震に": "<ruby>地震<rt>じしん</rt></ruby>に",
+"夏は": "<ruby>夏<rt>なつ</rt></ruby>は",
+"夏休みに友達に長い": "<ruby>夏休<rt>なつやす</rt></ruby>みに<ruby>友達<rt>ともだち</rt></ruby>に<ruby>長<rt>なが</rt></ruby>い",
+"夜、": "<ruby>夜<rt>よる</rt></ruby>、",
+"大事な話をする前に、少し": "<ruby>大事<rt>だいじ</rt></ruby>な<ruby>話<rt>はなし</rt></ruby>をする<ruby>前<rt>まえ</rt></ruby>に、<ruby>少<rt>すこ</rt></ruby>し",
+"大事な話をする前に、少し内容について": "<ruby>大事<rt>だいじ</rt></ruby>な<ruby>話<rt>はなし</rt></ruby>をする<ruby>前<rt>まえ</rt></ruby>に、<ruby>少<rt>すこ</rt></ruby>し<ruby>内容<rt>ないよう</rt></ruby>について",
+"大切な": "<ruby>大切<rt>たいせつ</rt></ruby>な",
+"大学で": "<ruby>大学<rt>だいがく</rt></ruby>で",
+"大学で経済を": "<ruby>大学<rt>だいがく</rt></ruby>で<ruby>経済<rt>けいざい</rt></ruby>を",
+"大学の": "<ruby>大学<rt>だいがく</rt></ruby>の",
+"天気の": "<ruby>天気<rt>てんき</rt></ruby>の",
+"女は": "<ruby>女<rt>おんな</rt></ruby>は",
+"始まっていた。": "<ruby>始<rt>はじ</rt></ruby>まっていた。",
+"学校の": "<ruby>学校<rt>がっこう</rt></ruby>の",
+"安全対策を": "<ruby>安全対策<rt>あんぜんたいさく</rt></ruby>を",
+"客でいつもにぎやかだ。": "<ruby>客<rt>きゃく</rt></ruby>でいつもにぎやかだ。",
+"寒い日は": "<ruby>寒<rt>さむ</rt></ruby>い<ruby>日<rt>ひ</rt></ruby>は",
+"小学校で": "<ruby>小学校<rt>しょうがっこう</rt></ruby>で",
+"山の上から見た": "<ruby>山<rt>やま</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>から<ruby>見<rt>み</rt></ruby>た",
+"帰りました。": "<ruby>帰<rt>かえ</rt></ruby>りました。",
+"彼の": "<ruby>彼<rt>かれ</rt></ruby>の",
+"彼の努力には": "<ruby>彼<rt>かれ</rt></ruby>の<ruby>努力<rt>どりょく</rt></ruby>には",
+"彼の発表は": "<ruby>彼<rt>かれ</rt></ruby>の<ruby>発表<rt>はっぴょう</rt></ruby>は",
+"彼は": "<ruby>彼<rt>かれ</rt></ruby>は",
+"彼女は返事を": "<ruby>彼女<rt>かのじょ</rt></ruby>は<ruby>返事<rt>へんじ</rt></ruby>を",
+"政府は緊急": "<ruby>政府<rt>せいふ</rt></ruby>は<ruby>緊急<rt>きんきゅう</rt></ruby>",
+"文化祭で": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>で",
+"文化祭でダンスを": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>でダンスを",
+"文化祭の": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>の",
+"文化祭の会場の": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>の<ruby>会場<rt>かいじょう</rt></ruby>の",
+"文化祭の成功を": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>の<ruby>成功<rt>せいこう</rt></ruby>を",
+"文化祭を": "<ruby>文化祭<rt>ぶんかさい</rt></ruby>を",
+"料理がたくさん": "<ruby>料理<rt>りょうり</rt></ruby>がたくさん",
+"新しい仕事に": "<ruby>新<rt>あたら</rt></ruby>しい<ruby>仕事<rt>しごと</rt></ruby>に",
+"旅行のために": "<ruby>旅行<rt>りょこう</rt></ruby>のために",
+"日曜日に家族と": "<ruby>日曜日<rt>にちようび</rt></ruby>に<ruby>家族<rt>かぞく</rt></ruby>と",
+"日本でいろいろな": "<ruby>日本<rt>にほん</rt></ruby>でいろいろな",
+"日本の文化に": "<ruby>日本<rt>にほん</rt></ruby>の<ruby>文化<rt>ぶんか</rt></ruby>に",
+"日本の生活にもだんだん": "<ruby>日本<rt>にほん</rt></ruby>の<ruby>生活<rt>せいかつ</rt></ruby>にもだんだん",
+"日本は子どもの頃からの": "<ruby>日本<rt>にほん</rt></ruby>は<ruby>子<rt>こ</rt></ruby>どもの<ruby>頃<rt>ころ</rt></ruby>からの",
+"日本語の先生はとても": "<ruby>日本語<rt>にほんご</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>はとても",
+"明日、授業で": "<ruby>明日<rt>あした</rt></ruby>、<ruby>授業<rt>じゅぎょう</rt></ruby>で",
+"明日は学校が": "<ruby>明日<rt>あした</rt></ruby>は<ruby>学校<rt>がっこう</rt></ruby>が",
+"春に、友達と": "<ruby>春<rt>はる</rt></ruby>に、<ruby>友達<rt>ともだち</rt></ruby>と",
+"春に、桜の": "<ruby>春<rt>はる</rt></ruby>に、<ruby>桜<rt>さくら</rt></ruby>の",
+"暑いので": "<ruby>暑<rt>あつ</rt></ruby>いので",
+"朝、ご": "<ruby>朝<rt>あさ</rt></ruby>、ご",
+"札を拾いました。": "<ruby>札<rt>さつ</rt></ruby>を<ruby>拾<rt>ひろ</rt></ruby>いました。",
+"来月、": "<ruby>来月<rt>らいげつ</rt></ruby>、",
+"来週、": "<ruby>来週<rt>らいしゅう</rt></ruby>、",
+"森の中で、": "<ruby>森<rt>もり</rt></ruby>の<ruby>中<rt>なか</rt></ruby>で、",
+"楽しみにしていた試合が中止になって、とても": "<ruby>楽<rt>たの</rt></ruby>しみにしていた<ruby>試合<rt>しあい</rt></ruby>が<ruby>中止<rt>ちゅうし</rt></ruby>になって、とても",
+"権力者による情報の": "<ruby>権力者<rt>けんりょくしゃ</rt></ruby>による<ruby>情報<rt>じょうほう</rt></ruby>の",
+"次の信号を": "<ruby>次<rt>つぎ</rt></ruby>の<ruby>信号<rt>しんごう</rt></ruby>を",
+"次の角を": "<ruby>次<rt>つぎ</rt></ruby>の<ruby>角<rt>かど</rt></ruby>を",
+"毎日、": "<ruby>毎日<rt>まいにち</rt></ruby>、",
+"毎日、日本語を": "<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>日本語<rt>にほんご</rt></ruby>を",
+"毎日の": "<ruby>毎日<rt>まいにち</rt></ruby>の",
+"毎日ピアノを": "<ruby>毎日<rt>まいにち</rt></ruby>ピアノを",
+"毎晩、本を": "<ruby>毎晩<rt>まいばん</rt></ruby>、<ruby>本<rt>ほん</rt></ruby>を",
+"毎朝、": "<ruby>毎朝<rt>まいあさ</rt></ruby>、",
+"毎朝、お茶を": "<ruby>毎朝<rt>まいあさ</rt></ruby>、お<ruby>茶<rt>ちゃ</rt></ruby>を",
+"毎朝八時に": "<ruby>毎朝<rt>まいあさ</rt></ruby><ruby>八<rt>はち</rt></ruby><ruby>時<rt>じ</rt></ruby>に",
+"注文した荷物が": "<ruby>注文<rt>ちゅうもん</rt></ruby>した<ruby>荷物<rt>にもつ</rt></ruby>が",
+"海外に社員を": "<ruby>海外<rt>かいがい</rt></ruby>に<ruby>社員<rt>しゃいん</rt></ruby>を",
+"温泉に入ると": "<ruby>温泉<rt>おんせん</rt></ruby>に<ruby>入<rt>はい</rt></ruby>ると",
+"父の": "<ruby>父<rt>ちち</rt></ruby>の",
+"父は": "<ruby>父<rt>ちち</rt></ruby>は",
+"父は毎日遅くまで": "<ruby>父<rt>ちち</rt></ruby>は<ruby>毎日<rt>まいにち</rt></ruby><ruby>遅<rt>おそ</rt></ruby>くまで",
+"父は車の": "<ruby>父<rt>ちち</rt></ruby>は<ruby>車<rt>くるま</rt></ruby>の",
+"留学は": "<ruby>留学<rt>りゅうがく</rt></ruby>は",
+"留学生を": "<ruby>留学生<rt>りゅうがくせい</rt></ruby>を",
+"発表の準備は": "<ruby>発表<rt>はっぴょう</rt></ruby>の<ruby>準備<rt>じゅんび</rt></ruby>は",
+"発表会で大きな": "<ruby>発表会<rt>はっぴょうかい</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きな",
+"的な価値を持つ作品だ。": "<ruby>的<rt>てき</rt></ruby>な<ruby>価値<rt>かち</rt></ruby>を<ruby>持<rt>も</rt></ruby>つ<ruby>作品<rt>さくひん</rt></ruby>だ。",
+"的な絵はよく分からない。": "<ruby>的<rt>てき</rt></ruby>な<ruby>絵<rt>え</rt></ruby>はよく<ruby>分<rt>わ</rt></ruby>からない。",
+"皆さんに心から": "<ruby>皆<rt>みな</rt></ruby>さんに<ruby>心<rt>こころ</rt></ruby>から",
+"皆さんの": "<ruby>皆<rt>みな</rt></ruby>さんの",
+"着物に美しい": "<ruby>着物<rt>きもの</rt></ruby>に<ruby>美<rt>うつく</rt></ruby>しい",
+"着物の": "<ruby>着物<rt>きもの</rt></ruby>の",
+"祇園祭では、山鉾が町を": "<ruby>祇園祭<rt>ぎおんまつり</rt></ruby>では、<ruby>山鉾<rt>やまぼこ</rt></ruby>が<ruby>町<rt>まち</rt></ruby>を",
+"祇園祭の": "<ruby>祇園祭<rt>ぎおんまつり</rt></ruby>の",
+"祖母はよく昔の": "<ruby>祖母<rt>そぼ</rt></ruby>はよく<ruby>昔<rt>むかし</rt></ruby>の",
+"祖父は戦争の体験を静かに": "<ruby>祖父<rt>そふ</rt></ruby>は<ruby>戦争<rt>せんそう</rt></ruby>の<ruby>体験<rt>たいけん</rt></ruby>を<ruby>静<rt>しず</rt></ruby>かに",
+"神社の": "<ruby>神社<rt>じんじゃ</rt></ruby>の",
+"祭りの": "<ruby>祭<rt>まつ</rt></ruby>りの",
+"私は両親を心から": "<ruby>私<rt>わたし</rt></ruby>は<ruby>両親<rt>りょうしん</rt></ruby>を<ruby>心<rt>こころ</rt></ruby>から",
+"秋の京都で、美しい": "<ruby>秋<rt>あき</rt></ruby>の<ruby>京都<rt>きょうと</rt></ruby>で、<ruby>美<rt>うつく</rt></ruby>しい",
+"舞台の上で": "<ruby>舞台<rt>ぶたい</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>で",
+"舞妓さんの": "<ruby>舞妓<rt>まいこ</rt></ruby>さんの",
+"若い世代が、祭りの文化を": "<ruby>若<rt>わか</rt></ruby>い<ruby>世代<rt>せだい</rt></ruby>が、<ruby>祭<rt>まつ</rt></ruby>りの<ruby>文化<rt>ぶんか</rt></ruby>を",
+"茶道の": "<ruby>茶道<rt>さどう</rt></ruby>の",
+"計画をもう一度": "<ruby>計画<rt>けいかく</rt></ruby>をもう<ruby>一度<rt>いちど</rt></ruby>",
+"試験に": "<ruby>試験<rt>しけん</rt></ruby>に",
+"試験の": "<ruby>試験<rt>しけん</rt></ruby>の",
+"試験範囲を": "<ruby>試験<rt>しけん</rt></ruby><ruby>範囲<rt>はんい</rt></ruby>を",
+"話し合いの結果、お互いに": "<ruby>話<rt>はな</rt></ruby>し<ruby>合<rt>あ</rt></ruby>いの<ruby>結果<rt>けっか</rt></ruby>、お<ruby>互<rt>たが</rt></ruby>いに",
+"誠に": "<ruby>誠<rt>まこと</rt></ruby>に",
+"警察が犯人を": "<ruby>警察<rt>けいさつ</rt></ruby>が<ruby>犯人<rt>はんにん</rt></ruby>を",
+"負けを認めた。": "<ruby>負<rt>ま</rt></ruby>けを<ruby>認<rt>みと</rt></ruby>めた。",
+"資金不足で計画が": "<ruby>資金<rt>しきん</rt></ruby><ruby>不足<rt>ふそく</rt></ruby>で<ruby>計画<rt>けいかく</rt></ruby>が",
+"近所の": "<ruby>近所<rt>きんじょ</rt></ruby>の",
+"週末に": "<ruby>週末<rt>しゅうまつ</rt></ruby>に",
+"道で財布を": "<ruby>道<rt>みち</rt></ruby>で<ruby>財布<rt>さいふ</rt></ruby>を",
+"道に迷ったので、地図で": "<ruby>道<rt>みち</rt></ruby>に<ruby>迷<rt>まよ</rt></ruby>ったので、<ruby>地図<rt>ちず</rt></ruby>で",
+"部屋の": "<ruby>部屋<rt>へや</rt></ruby>の",
+"長い間待っていた希望の会社から、やっと": "<ruby>長<rt>なが</rt></ruby>い<ruby>間<rt>あいだ</rt></ruby><ruby>待<rt>ま</rt></ruby>っていた<ruby>希望<rt>きぼう</rt></ruby>の<ruby>会社<rt>かいしゃ</rt></ruby>から、やっと",
+"長年の努力がついに": "<ruby>長年<rt>ながねん</rt></ruby>の<ruby>努力<rt>どりょく</rt></ruby>がついに",
+"雨が降ってきたので、": "<ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>ってきたので、",
+"雨で電車が": "<ruby>雨<rt>あめ</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>が",
+"雨のため、試合は来週に": "<ruby>雨<rt>あめ</rt></ruby>のため、<ruby>試合<rt>しあい</rt></ruby>は<ruby>来週<rt>らいしゅう</rt></ruby>に",
+"駅の": "<ruby>駅<rt>えき</rt></ruby>の",
+"駅の前で友達を": "<ruby>駅<rt>えき</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>で<ruby>友達<rt>ともだち</rt></ruby>を",
+"駅まで": "<ruby>駅<rt>えき</rt></ruby>まで",
+"髪の女の子がいます。": "<ruby>髪<rt>かみ</rt></ruby>の<ruby>女<rt>おんな</rt></ruby>の<ruby>子<rt>こ</rt></ruby>がいます。"
+};
+function rb(s) { return (FURIGANA_ON && RUBY[s]) ? RUBY[s] : esc(s); }
+function toggleFuri() {
+  FURIGANA_ON = !FURIGANA_ON;
+  document.getElementById("b-furi").classList.toggle("sel", FURIGANA_ON);
+  if (document.getElementById("s-example").classList.contains("on")) renderExample();
+  else if (document.getElementById("s-game").classList.contains("on")) render();
+}
 
 /* ===== 題目資料：可以直接在這裡新增、修改 ===== */
 
@@ -542,7 +872,7 @@ function render() {
     mid = showing === "a" ? `<span class="ans">【${esc(right)}】</span>` : `【${esc(wrong)}】`;
     if (showing === "a") note = `<div id="note"><span class="x">${esc(wrong)}</span> → <span class="o">${esc(right)}</span></div>`;
   }
-  box.innerHTML = `<span>${esc(pre)}${mid}${esc(post)}</span>` + note;
+  box.innerHTML = `<span>${rb(pre)}${mid}${rb(post)}</span>` + note;
   fit();
 }
 
@@ -652,11 +982,11 @@ function renderExample() {
   const e = EXAMPLE[mode];
   $("#ex-sub").innerHTML = MODE_DESC[mode];
   if (exStep === 0) {
-    $("#ex-sentence").innerHTML = `${e.pre}【${e.q}】${e.post}`;
+    $("#ex-sentence").innerHTML = `${rb(e.pre)}【${e.q}】${rb(e.post)}`;
     $("#ex-note").innerHTML = `<span class="hint">${e.hint}</span>`;
     $("#ex-go").textContent = "クリックで答えを見る ▶";
   } else {
-    $("#ex-sentence").innerHTML = `${e.pre}<span class="ans">【${e.a}】</span>${e.post}`;
+    $("#ex-sentence").innerHTML = `${rb(e.pre)}<span class="ans">【${e.a}】</span>${rb(e.post)}`;
     $("#ex-note").innerHTML = (mode === "read" ? `${e.q}` : `<span class="x">${e.q}</span>`)
       + ` → <span class="o">${e.a}</span>　正解！🍫`;
     $("#ex-go").textContent = "クリックしてスタート ▶";
@@ -690,6 +1020,7 @@ function advance() {
 }
 $("#b-reset").onclick = reset;
 $("#b-list").onclick = () => openList(mode);
+$("#b-furi").onclick = toggleFuri;
 $("#list-close").onclick = closeList;
 $("#list").onclick = e => { if (e.target.id === "list") closeList(); };
 document.querySelectorAll("[data-lm]").forEach(b => b.onclick = () => openList(b.dataset.lm));
@@ -709,6 +1040,7 @@ document.addEventListener("keydown", e => {
   else if (k === "ArrowLeft" || k === "PageUp" || k === "Backspace") { e.preventDefault(); back(); }
   else if (k === "a" || k === "A") toggleAnswer();
   else if (k === "f" || k === "F") fullscreen();
+  else if (k === "r" || k === "R") toggleFuri();
   else if (k === "t" || k === "T" || k === "Escape") goMenu();
   else if (k === "z" || k === "Z") { setMode("read"); showMethod(); }
   else if (k === "x" || k === "X") { setMode("wrong"); showMethod(); }
