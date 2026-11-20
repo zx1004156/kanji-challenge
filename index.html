@@ -117,6 +117,7 @@
   .lvb { width: 150px; height: 150px; border-radius: 50%; color: #fff; font-size: 84px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .lvn { font-size: 48px; font-weight: 700; color: #333; }
   .lvj { font-size: 32px; color: #777; }
+  #qno { position: absolute; left: 22px; bottom: 14px; font-size: 20px; color: rgba(0,0,0,.28); z-index: 2; font-family: Arial, sans-serif; }
   #count { position: absolute; right: 50px; top: 95px; font-size: 30px; color: #999; }
 
   /* control bar: appears when the mouse moves */
@@ -234,6 +235,7 @@
 
   <div class="screen" id="s-game">
     <div id="lvl"></div>
+    <div id="qno"></div>
     <div id="count"></div>
     <div id="mode"></div>
     <div id="sentence"></div>
@@ -590,6 +592,27 @@ const ANS_RUBY = {
   read: {"花": "<ruby>花<rt>はな</rt></ruby>", "手紙": "<ruby>手紙<rt>てがみ</rt></ruby>", "医者": "<ruby>医者<rt>いしゃ</rt></ruby>", "火曜日": "<ruby>火曜日<rt>かようび</rt></ruby>", "話し": "<ruby>話<rt>はな</rt></ruby>し", "待って": "<ruby>待<rt>ま</rt></ruby>って", "牛乳": "<ruby>牛乳<rt>ぎゅうにゅう</rt></ruby>", "図書館": "<ruby>図書館<rt>としょかん</rt></ruby>", "映画": "<ruby>映画<rt>えいが</rt></ruby>", "有名": "<ruby>有名<rt>ゆうめい</rt></ruby>", "建物": "<ruby>建物<rt>たてもの</rt></ruby>", "天気": "<ruby>天気<rt>てんき</rt></ruby>", "写真": "<ruby>写真<rt>しゃしん</rt></ruby>", "勉強": "<ruby>勉強<rt>べんきょう</rt></ruby>", "先週": "<ruby>先週<rt>せんしゅう</rt></ruby>", "料理": "<ruby>料理<rt>りょうり</rt></ruby>", "誕生日": "<ruby>誕生日<rt>たんじょうび</rt></ruby>", "宿題": "<ruby>宿題<rt>しゅくだい</rt></ruby>", "病院": "<ruby>病院<rt>びょういん</rt></ruby>", "旅行": "<ruby>旅行<rt>りょこう</rt></ruby>", "去年": "<ruby>去年<rt>きょねん</rt></ruby>", "野菜": "<ruby>野菜<rt>やさい</rt></ruby>", "窓": "<ruby>窓<rt>まど</rt></ruby>", "自転車": "<ruby>自転車<rt>じてんしゃ</rt></ruby>", "仕事": "<ruby>仕事<rt>しごと</rt></ruby>", "動物": "<ruby>動物<rt>どうぶつ</rt></ruby>", "教室": "<ruby>教室<rt>きょうしつ</rt></ruby>", "海": "<ruby>海<rt>うみ</rt></ruby>", "新聞": "<ruby>新聞<rt>しんぶん</rt></ruby>", "安い": "<ruby>安<rt>やす</rt></ruby>い", "友達": "<ruby>友達<rt>ともだち</rt></ruby>", "空": "<ruby>空<rt>そら</rt></ruby>", "昼休み": "<ruby>昼休<rt>ひるやす</rt></ruby>み", "寒い": "<ruby>寒<rt>さむ</rt></ruby>い", "毎晩": "<ruby>毎晩<rt>まいばん</rt></ruby>", "近く": "<ruby>近<rt>ちか</rt></ruby>く", "電話": "<ruby>電話<rt>でんわ</rt></ruby>", "大学": "<ruby>大学<rt>だいがく</rt></ruby>", "時計": "<ruby>時計<rt>とけい</rt></ruby>", "食堂": "<ruby>食堂<rt>しょくどう</rt></ruby>", "花見": "<ruby>花見<rt>はなみ</rt></ruby>", "都合": "<ruby>都合<rt>つごう</rt></ruby>", "必要": "<ruby>必要<rt>ひつよう</rt></ruby>", "語って": "<ruby>語<rt>かた</rt></ruby>って", "明日": "<ruby>明日<rt>あす</rt></ruby>", "急いで": "<ruby>急<rt>いそ</rt></ruby>いで", "雰囲気": "<ruby>雰囲気<rt>ふんいき</rt></ruby>", "迷って": "<ruby>迷<rt>まよ</rt></ruby>って", "確認": "<ruby>確認<rt>かくにん</rt></ruby>", "係員": "<ruby>係員<rt>かかりいん</rt></ruby>", "残念": "<ruby>残念<rt>ざんねん</rt></ruby>", "準備": "<ruby>準備<rt>じゅんび</rt></ruby>", "景色": "<ruby>景色<rt>けしき</rt></ruby>", "合格": "<ruby>合格<rt>ごうかく</rt></ruby>", "拾い": "<ruby>拾<rt>ひろ</rt></ruby>い", "約束": "<ruby>約束<rt>やくそく</rt></ruby>", "慣れて": "<ruby>慣<rt>な</rt></ruby>れて", "挑戦": "<ruby>挑戦<rt>ちょうせん</rt></ruby>", "歴史": "<ruby>歴史<rt>れきし</rt></ruby>", "行列": "<ruby>行列<rt>ぎょうれつ</rt></ruby>", "協力": "<ruby>協力<rt>きょうりょく</rt></ruby>", "浴衣": "<ruby>浴衣<rt>ゆかた</rt></ruby>", "受付": "<ruby>受付<rt>うけつけ</rt></ruby>", "神社": "<ruby>神社<rt>じんじゃ</rt></ruby>", "現在地": "<ruby>現在地<rt>げんざいち</rt></ruby>", "蒸し暑い": "<ruby>蒸<rt>む</rt></ruby>し<ruby>暑<rt>あつ</rt></ruby>い", "屋台": "<ruby>屋台<rt>やたい</rt></ruby>", "努力": "<ruby>努力<rt>どりょく</rt></ruby>", "熱心": "<ruby>熱心<rt>ねっしん</rt></ruby>", "緊張": "<ruby>緊張<rt>きんちょう</rt></ruby>", "尊敬": "<ruby>尊敬<rt>そんけい</rt></ruby>", "厳しい": "<ruby>厳<rt>きび</rt></ruby>しい", "案内": "<ruby>案内<rt>あんない</rt></ruby>", "感動": "<ruby>感動<rt>かんどう</rt></ruby>", "将来": "<ruby>将来<rt>しょうらい</rt></ruby>", "遅れて": "<ruby>遅<rt>おく</rt></ruby>れて", "祝日": "<ruby>祝日<rt>しゅくじつ</rt></ruby>", "拍手": "<ruby>拍手<rt>はくしゅ</rt></ruby>", "体操": "<ruby>体操<rt>たいそう</rt></ruby>", "十歳": "<ruby>十歳<rt>じゅっさい</rt></ruby>", "伝統": "<ruby>伝統<rt>でんとう</rt></ruby>", "童歌": "<ruby>童歌<rt>わらべうた</rt></ruby>", "血管": "<ruby>血管<rt>けっかん</rt></ruby>", "老いた": "<ruby>老<rt>お</rt></ruby>いた", "暖冬": "<ruby>暖冬<rt>だんとう</rt></ruby>", "備えて": "<ruby>備<rt>そな</rt></ruby>えて", "銭湯": "<ruby>銭湯<rt>せんとう</rt></ruby>", "紅葉": "<ruby>紅葉<rt>こうよう</rt></ruby>", "内定": "<ruby>内定<rt>ないてい</rt></ruby>", "継承": "<ruby>継承<rt>けいしょう</rt></ruby>", "躊躇": "<ruby>躊躇<rt>ちゅうちょ</rt></ruby>", "絢爛": "<ruby>絢爛<rt>けんらん</rt></ruby>", "隠蔽": "<ruby>隠蔽<rt>いんぺい</rt></ruby>", "巡行": "<ruby>巡行<rt>じゅんこう</rt></ruby>", "延期": "<ruby>延期<rt>えんき</rt></ruby>", "妥協": "<ruby>妥協<rt>だきょう</rt></ruby>", "趣": "<ruby>趣<rt>おもむき</rt></ruby>", "鮮やか": "<ruby>鮮<rt>あざ</rt></ruby>やか", "助言": "<ruby>助言<rt>じょげん</rt></ruby>", "報われた": "<ruby>報<rt>むく</rt></ruby>われた", "円滑": "<ruby>円滑<rt>えんかつ</rt></ruby>", "謙虚": "<ruby>謙虚<rt>けんきょ</rt></ruby>", "職人": "<ruby>職人<rt>しょくにん</rt></ruby>", "曖昧": "<ruby>曖昧<rt>あいまい</rt></ruby>", "憂鬱": "<ruby>憂鬱<rt>ゆううつ</rt></ruby>", "貢献": "<ruby>貢献<rt>こうけん</rt></ruby>", "華やか": "<ruby>華<rt>はな</rt></ruby>やか", "境内": "<ruby>境内<rt>けいだい</rt></ruby>", "帯": "<ruby>帯<rt>おび</rt></ruby>", "所作": "<ruby>所作<rt>しょさ</rt></ruby>", "囃子": "<ruby>囃子<rt>はやし</rt></ruby>", "厳か": "<ruby>厳<rt>おごそ</rt></ruby>か", "慣習": "<ruby>慣習<rt>かんしゅう</rt></ruby>", "祈願": "<ruby>祈願<rt>きがん</rt></ruby>", "斬新": "<ruby>斬新<rt>ざんしん</rt></ruby>", "潔く": "<ruby>潔<rt>いさぎよ</rt></ruby>く", "狩人": "<ruby>狩人<rt>かりゅうど</rt></ruby>", "嫌悪感": "<ruby>嫌悪感<rt>けんおかん</rt></ruby>", "撤兵": "<ruby>撤兵<rt>てっぺい</rt></ruby>", "作法": "<ruby>作法<rt>さほう</rt></ruby>", "風情": "<ruby>風情<rt>ふぜい</rt></ruby>", "老舗": "<ruby>老舗<rt>しにせ</rt></ruby>", "神輿": "<ruby>神輿<rt>みこし</rt></ruby>", "刺繍": "<ruby>刺繍<rt>ししゅう</rt></ruby>", "脱帽": "<ruby>脱帽<rt>だつぼう</rt></ruby>", "粋": "<ruby>粋<rt>いき</rt></ruby>", "修復": "<ruby>修復<rt>しゅうふく</rt></ruby>", "伝承": "<ruby>伝承<rt>でんしょう</rt></ruby>", "由来": "<ruby>由来<rt>ゆらい</rt></ruby>", "繁盛": "<ruby>繁盛<rt>はんじょう</rt></ruby>", "公園": "<ruby>公園<rt>こうえん</rt></ruby>"},
   wrong: {"電車": "<ruby>電車<rt>でんしゃ</rt></ruby>", "天気": "<ruby>天気<rt>てんき</rt></ruby>", "待って": "<ruby>待<rt>ま</rt></ruby>って", "図書館": "<ruby>図書館<rt>としょかん</rt></ruby>", "料理": "<ruby>料理<rt>りょうり</rt></ruby>", "牛乳": "<ruby>牛乳<rt>ぎゅうにゅう</rt></ruby>", "先週": "<ruby>先週<rt>せんしゅう</rt></ruby>", "勉強": "<ruby>勉強<rt>べんきょう</rt></ruby>", "写真": "<ruby>写真<rt>しゃしん</rt></ruby>", "休み": "<ruby>休<rt>やす</rt></ruby>み", "買い物": "<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>", "会社": "<ruby>会社<rt>かいしゃ</rt></ruby>", "東京": "<ruby>東京<rt>とうきょう</rt></ruby>", "飲み": "<ruby>飲<rt>の</rt></ruby>み", "漢字": "<ruby>漢字<rt>かんじ</rt></ruby>", "時間": "<ruby>時間<rt>じかん</rt></ruby>", "飯": "<ruby>飯<rt>はん</rt></ruby>", "車": "<ruby>車<rt>くるま</rt></ruby>", "日本語": "<ruby>日本語<rt>にほんご</rt></ruby>", "学校": "<ruby>学校<rt>がっこう</rt></ruby>", "右": "<ruby>右<rt>みぎ</rt></ruby>", "犬": "<ruby>犬<rt>いぬ</rt></ruby>", "土曜日": "<ruby>土曜日<rt>どようび</rt></ruby>", "午後": "<ruby>午後<rt>ごご</rt></ruby>", "見": "<ruby>見<rt>み</rt></ruby>", "雨": "<ruby>雨<rt>あめ</rt></ruby>", "読み": "<ruby>読<rt>よ</rt></ruby>み", "駅": "<ruby>駅<rt>えき</rt></ruby>", "広い": "<ruby>広<rt>ひろ</rt></ruby>い", "顔": "<ruby>顔<rt>かお</rt></ruby>", "黒": "<ruby>黒<rt>くろ</rt></ruby>", "歩いて": "<ruby>歩<rt>ある</rt></ruby>いて", "門": "<ruby>門<rt>もん</rt></ruby>", "書き": "<ruby>書<rt>か</rt></ruby>き", "魚": "<ruby>魚<rt>さかな</rt></ruby>", "千円": "<ruby>千円<rt>せんえん</rt></ruby>", "本": "<ruby>本<rt>ほん</rt></ruby>", "白い": "<ruby>白<rt>しろ</rt></ruby>い", "左": "<ruby>左<rt>ひだり</rt></ruby>", "長い": "<ruby>長<rt>なが</rt></ruby>い", "数学": "<ruby>数学<rt>すうがく</rt></ruby>", "馬": "<ruby>馬<rt>うま</rt></ruby>", "準備": "<ruby>準備<rt>じゅんび</rt></ruby>", "歴史": "<ruby>歴史<rt>れきし</rt></ruby>", "合格": "<ruby>合格<rt>ごうかく</rt></ruby>", "約束": "<ruby>約束<rt>やくそく</rt></ruby>", "行列": "<ruby>行列<rt>ぎょうれつ</rt></ruby>", "景色": "<ruby>景色<rt>けしき</rt></ruby>", "確認": "<ruby>確認<rt>かくにん</rt></ruby>", "経験": "<ruby>経験<rt>けいけん</rt></ruby>", "郵便局": "<ruby>郵便局<rt>ゆうびんきょく</rt></ruby>", "専門": "<ruby>専門<rt>せんもん</rt></ruby>", "環境": "<ruby>環境<rt>かんきょう</rt></ruby>", "雰囲気": "<ruby>雰囲気<rt>ふんいき</rt></ruby>", "係員": "<ruby>係員<rt>かかりいん</rt></ruby>", "浴衣": "<ruby>浴衣<rt>ゆかた</rt></ruby>", "緑": "<ruby>緑<rt>みどり</rt></ruby>", "鉄道": "<ruby>鉄道<rt>てつどう</rt></ruby>", "経済": "<ruby>経済<rt>けいざい</rt></ruby>", "発表": "<ruby>発表<rt>はっぴょう</rt></ruby>", "応援": "<ruby>応援<rt>おうえん</rt></ruby>", "複雑": "<ruby>複雑<rt>ふくざつ</rt></ruby>", "説明": "<ruby>説明<rt>せつめい</rt></ruby>", "練習": "<ruby>練習<rt>れんしゅう</rt></ruby>", "温泉": "<ruby>温泉<rt>おんせん</rt></ruby>", "貯金": "<ruby>貯金<rt>ちょきん</rt></ruby>", "成績": "<ruby>成績<rt>せいせき</rt></ruby>", "特徴": "<ruby>特徴<rt>とくちょう</rt></ruby>", "予約": "<ruby>予約<rt>よやく</rt></ruby>", "気持ち": "<ruby>気持<rt>きも</rt></ruby>ち", "種類": "<ruby>種類<rt>しゅるい</rt></ruby>", "壊れた": "<ruby>壊<rt>こわ</rt></ruby>れた", "選ばれた": "<ruby>選<rt>えら</rt></ruby>ばれた", "残って": "<ruby>残<rt>のこ</rt></ruby>って", "脚": "<ruby>脚<rt>あし</rt></ruby>", "地図": "<ruby>地図<rt>ちず</rt></ruby>", "変化": "<ruby>変化<rt>へんか</rt></ruby>", "試験": "<ruby>試験<rt>しけん</rt></ruby>", "安全": "<ruby>安全<rt>あんぜん</rt></ruby>", "感謝": "<ruby>感謝<rt>かんしゃ</rt></ruby>", "講義": "<ruby>講義<rt>こうぎ</rt></ruby>", "観光": "<ruby>観光<rt>かんこう</rt></ruby>", "興味": "<ruby>興味<rt>きょうみ</rt></ruby>", "歓迎": "<ruby>歓迎<rt>かんげい</rt></ruby>", "運転": "<ruby>運転<rt>うんてん</rt></ruby>", "会議": "<ruby>会議<rt>かいぎ</rt></ruby>", "届いた": "<ruby>届<rt>とど</rt></ruby>いた", "規則": "<ruby>規則<rt>きそく</rt></ruby>", "結果": "<ruby>結果<rt>けっか</rt></ruby>", "冷房": "<ruby>冷房<rt>れいぼう</rt></ruby>", "挑戦": "<ruby>挑戦<rt>ちょうせん</rt></ruby>", "完璧": "<ruby>完璧<rt>かんぺき</rt></ruby>", "道徳": "<ruby>道徳<rt>どうとく</rt></ruby>", "伝統": "<ruby>伝統<rt>でんとう</rt></ruby>", "紅葉": "<ruby>紅葉<rt>こうよう</rt></ruby>", "継承": "<ruby>継承<rt>けいしょう</rt></ruby>", "貢献": "<ruby>貢献<rt>こうけん</rt></ruby>", "延期": "<ruby>延期<rt>えんき</rt></ruby>", "謙虚": "<ruby>謙虚<rt>けんきょ</rt></ruby>", "職人": "<ruby>職人<rt>しょくにん</rt></ruby>", "曖昧": "<ruby>曖昧<rt>あいまい</rt></ruby>", "憂鬱": "<ruby>憂鬱<rt>ゆううつ</rt></ruby>", "徹底": "<ruby>徹底<rt>てってい</rt></ruby>", "貴重": "<ruby>貴重<rt>きちょう</rt></ruby>", "隠蔽": "<ruby>隠蔽<rt>いんぺい</rt></ruby>", "躊躇": "<ruby>躊躇<rt>ちゅうちょ</rt></ruby>", "絢爛": "<ruby>絢爛<rt>けんらん</rt></ruby>", "検討": "<ruby>検討<rt>けんとう</rt></ruby>", "価値": "<ruby>価値<rt>かち</rt></ruby>", "派遣": "<ruby>派遣<rt>はけん</rt></ruby>", "綿密": "<ruby>綿密<rt>めんみつ</rt></ruby>", "披露": "<ruby>披露<rt>ひろう</rt></ruby>", "既に": "<ruby>既<rt>すで</rt></ruby>に", "弊害": "<ruby>弊害<rt>へいがい</rt></ruby>", "緻密": "<ruby>緻密<rt>ちみつ</rt></ruby>", "臨機応変": "<ruby>臨機応変<rt>りんきおうへん</rt></ruby>", "網羅": "<ruby>網羅<rt>もうら</rt></ruby>", "憧れ": "<ruby>憧<rt>あこが</rt></ruby>れ", "頻繁": "<ruby>頻繁<rt>ひんぱん</rt></ruby>", "厳重": "<ruby>厳重<rt>げんじゅう</rt></ruby>", "顕著": "<ruby>顕著<rt>けんちょ</rt></ruby>", "捜査": "<ruby>捜査<rt>そうさ</rt></ruby>", "措置": "<ruby>措置<rt>そち</rt></ruby>", "遺憾": "<ruby>遺憾<rt>いかん</rt></ruby>", "普遍": "<ruby>普遍<rt>ふへん</rt></ruby>", "破綻": "<ruby>破綻<rt>はたん</rt></ruby>", "崩壊": "<ruby>崩壊<rt>ほうかい</rt></ruby>", "陳列": "<ruby>陳列<rt>ちんれつ</rt></ruby>", "抽象": "<ruby>抽象<rt>ちゅうしょう</rt></ruby>", "模倣": "<ruby>模倣<rt>もほう</rt></ruby>", "飛行機": "<ruby>飛行機<rt>ひこうき</rt></ruby>"}
 };
+/* Ｂの答え：まちがえた字だけを【】で表示する（[前, 錯字, 正字, 後, 讀音HTML]） */
+const DIFF = {"電車": ["", "电车", "電車", "", "<ruby>電車<rt>でんしゃ</rt></ruby>"], "天気": ["天", "气", "気", "", "<ruby>気<rt>き</rt></ruby>"], "待って": ["", "侍", "待", "って", "<ruby>待<rt>ま</rt></ruby>"], "図書館": ["図書", "舘", "館", "", "<ruby>館<rt>かん</rt></ruby>"], "料理": ["料", "埋", "理", "", "<ruby>理<rt>り</rt></ruby>"], "牛乳": ["牛", "孔", "乳", "", "<ruby>乳<rt>にゅう</rt></ruby>"], "先週": ["先", "周", "週", "", "<ruby>週<rt>しゅう</rt></ruby>"], "勉強": ["勉", "强", "強", "", "<ruby>強<rt>きょう</rt></ruby>"], "写真": ["", "寫", "写", "真", "<ruby>写<rt>しゃ</rt></ruby>"], "休み": ["", "体", "休", "み", "<ruby>休<rt>やす</rt></ruby>"], "買い物": ["", "売", "買", "い物", "<ruby>買<rt>か</rt></ruby>"], "会社": ["会", "杜", "社", "", "<ruby>社<rt>しゃ</rt></ruby>"], "東京": ["", "东", "東", "京", "<ruby>東<rt>とう</rt></ruby>"], "飲み": ["", "飯", "飲", "み", "<ruby>飲<rt>の</rt></ruby>"], "漢字": ["", "汉", "漢", "字", "<ruby>漢<rt>かん</rt></ruby>"], "時間": ["", "时间", "時間", "", "<ruby>時間<rt>じかん</rt></ruby>"], "飯": ["", "饭", "飯", "", "<ruby>飯<rt>はん</rt></ruby>"], "車": ["", "车", "車", "", "<ruby>車<rt>くるま</rt></ruby>"], "日本語": ["日本", "语", "語", "", "<ruby>語<rt>ご</rt></ruby>"], "学校": ["学", "挍", "校", "", "<ruby>校<rt>こう</rt></ruby>"], "右": ["", "石", "右", "", "<ruby>右<rt>みぎ</rt></ruby>"], "犬": ["", "大", "犬", "", "<ruby>犬<rt>いぬ</rt></ruby>"], "土曜日": ["", "士", "土", "曜日", "<ruby>土<rt>ど</rt></ruby>"], "午後": ["", "牛", "午", "後", "<ruby>午<rt>ご</rt></ruby>"], "見": ["", "貝", "見", "", "<ruby>見<rt>み</rt></ruby>"], "雨": ["", "両", "雨", "", "<ruby>雨<rt>あめ</rt></ruby>"], "読み": ["", "读", "読", "み", "<ruby>読<rt>よ</rt></ruby>"], "駅": ["", "驛", "駅", "", "<ruby>駅<rt>えき</rt></ruby>"], "広い": ["", "廣", "広", "い", "<ruby>広<rt>ひろ</rt></ruby>"], "顔": ["", "顏", "顔", "", "<ruby>顔<rt>かお</rt></ruby>"], "黒": ["", "黑", "黒", "", "<ruby>黒<rt>くろ</rt></ruby>"], "歩いて": ["", "步", "歩", "いて", "<ruby>歩<rt>ある</rt></ruby>"], "門": ["", "门", "門", "", "<ruby>門<rt>もん</rt></ruby>"], "書き": ["", "书", "書", "き", "<ruby>書<rt>か</rt></ruby>"], "魚": ["", "鱼", "魚", "", "<ruby>魚<rt>さかな</rt></ruby>"], "千円": ["", "干", "千", "円", "<ruby>千<rt>せん</rt></ruby>"], "本": ["", "木", "本", "", "<ruby>本<rt>ほん</rt></ruby>"], "白い": ["", "百", "白", "い", "<ruby>白<rt>しろ</rt></ruby>"], "左": ["", "友", "左", "", "<ruby>左<rt>ひだり</rt></ruby>"], "長い": ["", "长", "長", "い", "<ruby>長<rt>なが</rt></ruby>"], "数学": ["", "數", "数", "学", "<ruby>数<rt>すう</rt></ruby>"], "馬": ["", "马", "馬", "", "<ruby>馬<rt>うま</rt></ruby>"], "準備": ["準", "备", "備", "", "<ruby>備<rt>び</rt></ruby>"], "歴史": ["", "历", "歴", "史", "<ruby>歴<rt>れき</rt></ruby>"], "合格": ["合", "挌", "格", "", "<ruby>格<rt>かく</rt></ruby>"], "約束": ["約", "東", "束", "", "<ruby>束<rt>そく</rt></ruby>"], "行列": ["行", "例", "列", "", "<ruby>列<rt>れつ</rt></ruby>"], "景色": ["", "影", "景", "色", "<ruby>景<rt>け</rt></ruby>"], "確認": ["", "确认", "確認", "", "<ruby>確認<rt>かくにん</rt></ruby>"], "経験": ["", "经验", "経験", "", "<ruby>経験<rt>けいけん</rt></ruby>"], "郵便局": ["", "邮", "郵", "便局", "<ruby>郵<rt>ゆう</rt></ruby>"], "専門": ["専", "問", "門", "", "<ruby>門<rt>もん</rt></ruby>"], "環境": ["", "环", "環", "境", "<ruby>環<rt>かん</rt></ruby>"], "雰囲気": ["雰", "困", "囲", "気", "<ruby>囲<rt>い</rt></ruby>"], "係員": ["", "系", "係", "員", "<ruby>係<rt>かかり</rt></ruby>"], "浴衣": ["", "洛", "浴", "衣", "<ruby>浴<rt>ゆ</rt></ruby>"], "緑": ["", "録", "緑", "", "<ruby>緑<rt>みどり</rt></ruby>"], "鉄道": ["", "铁", "鉄", "道", "<ruby>鉄<rt>てつ</rt></ruby>"], "経済": ["", "经济", "経済", "", "<ruby>経済<rt>けいざい</rt></ruby>"], "発表": ["", "发", "発", "表", "<ruby>発<rt>はっ</rt></ruby>"], "応援": ["応", "授", "援", "", "<ruby>援<rt>えん</rt></ruby>"], "複雑": ["複", "雜", "雑", "", "<ruby>雑<rt>ざつ</rt></ruby>"], "説明": ["説", "朋", "明", "", "<ruby>明<rt>めい</rt></ruby>"], "練習": ["", "练习", "練習", "", "<ruby>練習<rt>れんしゅう</rt></ruby>"], "温泉": ["", "湿", "温", "泉", "<ruby>温<rt>おん</rt></ruby>"], "貯金": ["貯", "全", "金", "", "<ruby>金<rt>きん</rt></ruby>"], "成績": ["成", "積", "績", "", "<ruby>績<rt>せき</rt></ruby>"], "特徴": ["特", "微", "徴", "", "<ruby>徴<rt>ちょう</rt></ruby>"], "予約": ["", "預", "予", "約", "<ruby>予<rt>よ</rt></ruby>"], "気持ち": ["", "氣", "気", "持ち", "<ruby>気<rt>き</rt></ruby>"], "種類": ["種", "类", "類", "", "<ruby>類<rt>るい</rt></ruby>"], "壊れた": ["", "壞", "壊", "れた", "<ruby>壊<rt>こわ</rt></ruby>"], "選ばれた": ["", "选", "選", "ばれた", "<ruby>選<rt>えら</rt></ruby>"], "残って": ["", "殘", "残", "って", "<ruby>残<rt>のこ</rt></ruby>"], "脚": ["", "腳", "脚", "", "<ruby>脚<rt>あし</rt></ruby>"], "地図": ["地", "图", "図", "", "<ruby>図<rt>ず</rt></ruby>"], "変化": ["", "变", "変", "化", "<ruby>変<rt>へん</rt></ruby>"], "試験": ["", "式", "試", "験", "<ruby>試<rt>し</rt></ruby>"], "安全": ["安", "金", "全", "", "<ruby>全<rt>ぜん</rt></ruby>"], "感謝": ["感", "射", "謝", "", "<ruby>謝<rt>しゃ</rt></ruby>"], "講義": ["", "構", "講", "義", "<ruby>講<rt>こう</rt></ruby>"], "観光": ["", "观", "観", "光", "<ruby>観<rt>かん</rt></ruby>"], "興味": ["", "兴", "興", "味", "<ruby>興<rt>きょう</rt></ruby>"], "歓迎": ["", "観", "歓", "迎", "<ruby>歓<rt>かん</rt></ruby>"], "運転": ["", "运转", "運転", "", "<ruby>運転<rt>うんてん</rt></ruby>"], "会議": ["会", "议", "議", "", "<ruby>議<rt>ぎ</rt></ruby>"], "届いた": ["", "屈", "届", "いた", "<ruby>届<rt>とど</rt></ruby>"], "規則": ["規", "測", "則", "", "<ruby>則<rt>そく</rt></ruby>"], "結果": ["結", "菓", "果", "", "<ruby>果<rt>か</rt></ruby>"], "冷房": ["冷", "坊", "房", "", "<ruby>房<rt>ぼう</rt></ruby>"], "挑戦": ["挑", "战", "戦", "", "<ruby>戦<rt>せん</rt></ruby>"], "完璧": ["完", "壁", "璧", "", "<ruby>璧<rt>ぺき</rt></ruby>"], "道徳": ["道", "德", "徳", "", "<ruby>徳<rt>とく</rt></ruby>"], "伝統": ["", "传统", "伝統", "", "<ruby>伝統<rt>でんとう</rt></ruby>"], "紅葉": ["", "红叶", "紅葉", "", "<ruby>紅葉<rt>こうよう</rt></ruby>"], "継承": ["継", "乗", "承", "", "<ruby>承<rt>しょう</rt></ruby>"], "貢献": ["", "贡", "貢", "献", "<ruby>貢<rt>こう</rt></ruby>"], "延期": ["", "廷", "延", "期", "<ruby>延<rt>えん</rt></ruby>"], "謙虚": ["", "兼", "謙", "虚", "<ruby>謙<rt>けん</rt></ruby>"], "職人": ["", "識", "職", "人", "<ruby>職<rt>しょく</rt></ruby>"], "曖昧": ["", "暖", "曖", "昧", "<ruby>曖<rt>あい</rt></ruby>"], "憂鬱": ["", "優", "憂", "鬱", "<ruby>憂<rt>ゆう</rt></ruby>"], "徹底": ["", "撤", "徹", "底", "<ruby>徹<rt>てっ</rt></ruby>"], "貴重": ["", "責", "貴", "重", "<ruby>貴<rt>き</rt></ruby>"], "隠蔽": ["", "隐", "隠", "蔽", "<ruby>隠<rt>いん</rt></ruby>"], "躊躇": ["", "踌", "躊", "躇", "<ruby>躊<rt>ちゅう</rt></ruby>"], "絢爛": ["", "绚烂", "絢爛", "", "<ruby>絢爛<rt>けんらん</rt></ruby>"], "検討": ["", "険", "検", "討", "<ruby>検<rt>けん</rt></ruby>"], "価値": ["価", "植", "値", "", "<ruby>値<rt>ち</rt></ruby>"], "派遣": ["派", "遺", "遣", "", "<ruby>遣<rt>けん</rt></ruby>"], "綿密": ["綿", "蜜", "密", "", "<ruby>密<rt>みつ</rt></ruby>"], "披露": ["", "被", "披", "露", "<ruby>披<rt>ひ</rt></ruby>"], "既に": ["", "即", "既", "に", "<ruby>既<rt>すで</rt></ruby>"], "弊害": ["", "幣", "弊", "害", "<ruby>弊<rt>へい</rt></ruby>"], "緻密": ["", "致", "緻", "密", "<ruby>緻<rt>ち</rt></ruby>"], "臨機応変": ["臨機応", "辺", "変", "", "<ruby>変<rt>へん</rt></ruby>"], "網羅": ["", "綱", "網", "羅", "<ruby>網<rt>もう</rt></ruby>"], "憧れ": ["", "瞳", "憧", "れ", "<ruby>憧<rt>あこが</rt></ruby>"], "頻繁": ["", "频", "頻", "繁", "<ruby>頻<rt>ひん</rt></ruby>"], "厳重": ["", "嚴", "厳", "重", "<ruby>厳<rt>げん</rt></ruby>"], "顕著": ["", "顯", "顕", "著", "<ruby>顕<rt>けん</rt></ruby>"], "捜査": ["", "搜", "捜", "査", "<ruby>捜<rt>そう</rt></ruby>"], "措置": ["", "惜", "措", "置", "<ruby>措<rt>そ</rt></ruby>"], "遺憾": ["", "遣", "遺", "憾", "<ruby>遺<rt>い</rt></ruby>"], "普遍": ["普", "偏", "遍", "", "<ruby>遍<rt>へん</rt></ruby>"], "破綻": ["破", "錠", "綻", "", "<ruby>綻<rt>たん</rt></ruby>"], "崩壊": ["崩", "懐", "壊", "", "<ruby>壊<rt>かい</rt></ruby>"], "陳列": ["", "陣", "陳", "列", "<ruby>陳<rt>ちん</rt></ruby>"], "抽象": ["抽", "像", "象", "", "<ruby>象<rt>しょう</rt></ruby>"], "模倣": ["模", "放", "倣", "", "<ruby>倣<rt>ほう</rt></ruby>"], "飛行機": ["", "飞", "飛", "行機", "<ruby>飛<rt>ひ</rt></ruby>"]};
+/* 解答表（PDF）と同じ番号：難易度ごとに、Ａはよみ、Ｂは答えのよみの五十音順 */
+const ORDER = { read: {}, wrong: {} };
+function plainReading(h) { return h.replace(/<ruby>[^<]*<rt>([^<]*)<\/rt><\/ruby>/g, "$1"); }
+function buildOrder() {
+  for (const lv of ["軽", "中", "高"]) {
+    READ_Q.map((q, i) => [q[3], i]).filter(([, i]) => READ_Q[i][0] === lv)
+      .sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).forEach(([, i], n) => ORDER.read[i] = n + 1);
+    WRONG_Q.map((q, i) => [plainReading(ANS_RUBY.wrong[q[3]] || q[3]), i]).filter(([, i]) => WRONG_Q[i][0] === lv)
+      .sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0).forEach(([, i], n) => ORDER.wrong[i] = n + 1);
+  }
+}
+function diffAnswer(right) {
+  const d = DIFF[right]; if (!d) return `<span class="ans">【${ansRb(right)}】</span>`;
+  return `${esc(d[0])}<span class="ans">【${d[4]}】</span>${esc(d[3])}`;
+}
+function diffNote(wrong, right) {
+  const d = DIFF[right]; const w = d ? d[1] : wrong, r = d ? d[2] : right;
+  return `<span class="x">${esc(w)}</span> → <span class="o">${esc(r)}</span>`;
+}
 function ansRb(w) { return (FURIGANA_ON && ANS_RUBY[mode][w]) ? ANS_RUBY[mode][w] : esc(w); }
 function rb(s) { return (FURIGANA_ON && RUBY[s]) ? RUBY[s] : esc(s); }
 function toggleFuri() {
@@ -951,6 +974,7 @@ function render() {
   const box = $("#sentence");
   if (current === null) {
     $("#lvl").textContent = level === "ALL" ? "" : level;
+    $("#qno").textContent = "";
     box.innerHTML = finished
       ? `<span><span class="ans">${ROUND}問 終了！</span><br><span class="msg" style="font-size:40px">表を見てチョコを受け取ってください！クリックでメニューへ</span></span>`
       : pool().length
@@ -968,10 +992,11 @@ function render() {
     mid = showing === "a" ? `<span class="ans">【${ansRb(kanji)}】</span>` : `【${esc(kana)}】`;
   } else {
     const [wrong, right, kind] = [q[2], q[3], q[5]];
-    mid = showing === "a" ? `<span class="ans">【${ansRb(right)}】</span>` : `【${esc(wrong)}】`;
-    if (showing === "a") note = `<div id="note"><span class="x">${esc(wrong)}</span> → <span class="o">${esc(right)}</span></div>`;
+    mid = showing === "a" ? diffAnswer(right) : `【${esc(wrong)}】`;
+    if (showing === "a") note = `<div id="note">${diffNote(wrong, right)}</div>`;
   }
   box.innerHTML = `<span>${rb(pre)}${mid}${rb(post)}</span>` + note;
+  $("#qno").textContent = `${lv}-${ORDER[mode][current]}`;
   fit();
 }
 
@@ -1002,6 +1027,18 @@ function next() {
   render();
 }
 function toggleAnswer() { if (current === null) return; showing = showing === "q" ? "a" : "q"; render(); }
+function goBack() {
+  const on = id => $("#s-" + id).classList.contains("on");
+  if (on("game")) {
+    if (current !== null && showing === "q" && !history.length && !finished) showLevel();   // 第1問の問題 → 難易度へ
+    else if (current === null && !finished) showLevel();
+    else back();
+  }
+  else if (on("level")) showPrize();
+  else if (on("prize")) showMethod();
+  else if (on("method")) { exStep = 1; renderExample(); show("example"); }
+  else if (on("example")) { if (exStep === 1) { exStep = 0; renderExample(); } else goMenu(); }
+}
 function back() {
   if (finished) { finished = false; current = history.pop(); showing = "a"; render(); return; }
   if (current === null) return;
@@ -1090,10 +1127,9 @@ function renderExample() {
     $("#ex-note").innerHTML = `<span class="hint">${e.hint}</span>`;
     $("#ex-go").textContent = "クリックで答えを見る ▶";
   } else {
-    $("#ex-sentence").innerHTML = `${rb(e.pre)}<span class="ans">【${ansRb(e.a)}】</span>${rb(e.post)}`;
-    $("#ex-note").innerHTML = (mode === "read" ? `${e.q}` : `<span class="x">${e.q}</span>`)
-      + ` → <span class="o">${e.a}</span>`;
-    $("#ex-go").textContent = "クリックしてスタート ▶";
+    $("#ex-sentence").innerHTML = `${rb(e.pre)}${mode === "read" ? `<span class="ans">【${ansRb(e.a)}】</span>` : diffAnswer(e.a)}${rb(e.post)}`;
+    $("#ex-note").innerHTML = mode === "read" ? `${e.q} → <span class="o">${e.a}</span>` : diffNote(e.q, e.a);
+    $("#ex-go").textContent = "クリックして次へ ▶";
   }
 }
 
@@ -1118,19 +1154,22 @@ function abandonRound() {
 }
 function chooseLevel(lv) {
   if (lv !== level && (roundNum > 0 || finished)) abandonRound();   // 途中で難易度を変えたら、このラウンドはやり直し
-  setLevel(lv); showExample();
+  setLevel(lv); startGame();
 }
 document.querySelectorAll(".lvc").forEach(c => c.onclick = () => chooseLevel(c.dataset.lv));
 function showMethod() {
   focusCard(MODES.indexOf(mode)); $("#m-sub").innerHTML = MODE_DESC[mode]; show("method"); }
-document.querySelectorAll(".card").forEach(c => c.onclick = () => { setMode(c.dataset.mode); showMethod(); });
+document.querySelectorAll(".card").forEach(c => c.onclick = () => { setMode(c.dataset.mode); showExample(); });
 /* 點畫面任何地方：出題 → 公布答案 → 下一題 */
 $("#s-game").addEventListener("click", next);
 $("#s-method").addEventListener("click", showPrize);
 $("#s-prize").addEventListener("click", showLevel);
 function exampleNext() {
   if (exStep === 0) { exStep = 1; renderExample(); }
-  else if (current === null && !finished) next(); else render();
+  else showMethod();
+}
+function startGame() {   // 難易度を選んだあと：最初の問題へ（途中なら続きから）
+  if (current === null && !finished) next(); else render();
 }
 $("#s-example").addEventListener("click", exampleNext);
 /* 依目前畫面決定「下一步」 */
@@ -1153,15 +1192,10 @@ document.addEventListener("keydown", e => {
   const k = e.key;
   if ($("#list").classList.contains("on")) { if (k === "Escape" || k === "l" || k === "L") closeList(); return; }
   if (k === "l" || k === "L") { openList(mode); return; }
-  // 説明ページで Backspace／PageUp：前のページへ
-  if ((k === "Backspace" || k === "PageUp") && !$("#s-game").classList.contains("on")) {
-    e.preventDefault();
-    if ($("#s-example").classList.contains("on")) showLevel();
-    else if ($("#s-level").classList.contains("on")) showPrize();
-    else if ($("#s-prize").classList.contains("on")) showMethod();
-    else if ($("#s-method").classList.contains("on")) goMenu();
-    return;
-  }
+  // ← ／ Backspace ／ PageUp：前の画面へ（難易度画面とメニューでは ← は選択の移動）
+  const isBack = k === "Backspace" || k === "PageUp" ||
+    (k === "ArrowLeft" && !$("#s-level").classList.contains("on") && !$("#s-title").classList.contains("on"));
+  if (isBack) { e.preventDefault(); goBack(); return; }
   if ($("#s-level").classList.contains("on")) {      // 難易度：← → で選ぶ、Enter で決定
     if (k === "ArrowLeft" || k === "ArrowRight") { e.preventDefault(); focusLv(lvIdx + (k === "ArrowLeft" ? -1 : 1)); return; }
     if (k === "Enter" || k === " ") { e.preventDefault(); chooseLevel(LEVELS[lvIdx]); return; }
@@ -1171,7 +1205,7 @@ document.addEventListener("keydown", e => {
   }
   if ($("#s-title").classList.contains("on")) {      // メニュー：← → で選ぶ、Enter で決定
     if (k === "ArrowLeft" || k === "ArrowRight") { e.preventDefault(); focusCard(k === "ArrowLeft" ? 0 : 1); return; }
-    if (k === "Enter") { e.preventDefault(); const m = MODES[cardIdx]; setMode(m); showMethod(); return; }
+    if (k === "Enter") { e.preventDefault(); const m = MODES[cardIdx]; setMode(m); showExample(); return; }
     if (k === " " || k === "PageDown" || k === "PageUp" || k === "Backspace") { e.preventDefault(); return; }
   }
   if (k === " " || k === "Enter" || k === "ArrowRight" || k === "PageDown") { e.preventDefault(); advance(); }
@@ -1179,8 +1213,8 @@ document.addEventListener("keydown", e => {
   else if (k === "a" || k === "A") toggleAnswer();
   else if (k === "f" || k === "F") fullscreen();
   else if (k === "t" || k === "T" || k === "Escape") goMenu();
-  else if (k === "z" || k === "Z") { setMode("read"); showMethod(); }
-  else if (k === "x" || k === "X") { setMode("wrong"); showMethod(); }
+  else if (k === "z" || k === "Z") { setMode("read"); showExample(); }
+  else if (k === "x" || k === "X") { setMode("wrong"); showExample(); }
   else if (k === "m" || k === "M") showMethod();
   else if (k === "h" || k === "H") $("#bar").classList.toggle("hide");
 });
@@ -1204,6 +1238,7 @@ addEventListener("resize", resize);
 resize();
 document.querySelectorAll(".footer").forEach(f => f.textContent = FOOTER);
 buildPrizeTable();
+buildOrder();
 setLevel(null);
 setMode("read");
 show("title");
